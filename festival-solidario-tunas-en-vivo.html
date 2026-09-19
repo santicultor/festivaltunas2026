@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>XXIII Festival Solidario de Tunas – En vivo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#00205B; --blue:#00387b;
+  --bg:#ffffff; --ink:#00205B; --soft:rgba(0,32,91,.72); --line:rgba(0,32,91,.14);
+  --hero:#00205B; --now-bg:rgba(0,56,123,.09);
+  --serif:'Fraunces',Georgia,'Times New Roman',serif;
+  --sans:'Instrument Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#00205B; --ink:#ffffff; --soft:rgba(255,255,255,.76); --line:rgba(255,255,255,.18);
+    --hero:#00387b; --now-bg:rgba(255,255,255,.10);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#00205B; --ink:#ffffff; --soft:rgba(255,255,255,.76); --line:rgba(255,255,255,.18);
+  --hero:#00387b; --now-bg:rgba(255,255,255,.10);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px 56px}
+
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding:24px 0 16px}
+.fest{font-family:var(--serif);font-weight:600;font-size:1.2rem;line-height:1.2;margin:0}
+.uni{margin:2px 0 0;color:var(--soft);font-size:.85rem}
+.clock{text-align:right;flex:none}
+.clock time{display:block;font-variant-numeric:tabular-nums;font-weight:600;font-size:1.05rem;white-space:nowrap}
+.clock span{font-size:.75rem;color:var(--soft)}
+
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line);margin-bottom:20px}
+.tabs button{appearance:none;background:none;border:0;padding:12px 0;font:inherit;font-weight:500;color:var(--soft);
+  border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink);font-weight:600}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+
+/* Hero */
+.hero{background:var(--hero);color:#fff;border-radius:20px;padding:26px 24px 24px}
+.live{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;color:rgba(255,255,255,.88)}
+.dot{width:8px;height:8px;border-radius:50%;background:#fff}
+.live.on .dot{animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){.live.on .dot{animation:none}.bar i{transition:none}}
+.kicker{margin:22px 0 6px;color:rgba(255,255,255,.82);font-size:.95rem}
+.title{font-family:var(--serif);font-weight:600;font-size:clamp(2rem,8vw,3rem);line-height:1.08;margin:0;
+  letter-spacing:-.015em;overflow-wrap:anywhere;text-wrap:balance;font-variant-numeric:tabular-nums}
+.sub{margin:12px 0 0;color:rgba(255,255,255,.84)}
+.bar{height:4px;border-radius:2px;background:rgba(255,255,255,.24);margin-top:26px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:#fff;transition:width 1s linear}
+.barinfo{display:flex;justify-content:space-between;gap:12px;margin-top:8px;font-size:.85rem;
+  color:rgba(255,255,255,.88);font-variant-numeric:tabular-nums}
+
+/* Sigue */
+.next{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 4px;border-bottom:1px solid var(--line)}
+.next .l{display:block;color:var(--soft);font-size:.85rem}
+.next .n{font-family:var(--serif);font-weight:600;font-size:1.25rem;line-height:1.2}
+.next .a{font-variant-numeric:tabular-nums;color:var(--soft);white-space:nowrap;font-size:.95rem}
+
+/* Programa */
+.h2{font-family:var(--serif);font-weight:600;font-size:1.2rem;margin:28px 0 6px}
+.prog{list-style:none;margin:0;padding:0}
+.row{display:grid;grid-template-columns:6.4rem 1fr;gap:12px;padding:14px 12px;border-bottom:1px solid var(--line);border-left:3px solid transparent}
+.row .tm{font-variant-numeric:tabular-nums;font-weight:600;font-size:.95rem;padding-top:2px;white-space:nowrap}
+.row h3{margin:0;font-family:var(--serif);font-weight:600;font-size:1.1rem;line-height:1.25}
+.row p{margin:2px 0 0;font-size:.85rem;color:var(--soft)}
+.row .tag{display:block;margin-top:6px;font-size:.85rem;font-weight:600}
+.row.past{opacity:.5}
+.row.now{background:var(--now-bg);border-left-color:var(--ink);border-radius:0 12px 12px 0}
+
+/* Transmisión */
+.stream{max-width:420px;margin:24px auto 0;text-align:center}
+.stream svg{width:56px;height:56px;color:var(--ink)}
+.stream h2{font-family:var(--serif);font-weight:600;font-size:1.6rem;line-height:1.2;margin:14px 0 8px}
+.stream p{color:var(--soft);margin:0 0 20px}
+.linkbox input{width:100%;padding:14px 16px;font:inherit;font-size:.95rem;border:1px solid var(--line);border-radius:12px;
+  background:transparent;color:var(--ink);text-align:center;text-overflow:ellipsis}
+.stream .btn{display:block;text-decoration:none;text-align:center}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.msg{color:var(--ink);font-weight:600;margin:12px 0 0!important;min-height:1.5em;font-size:.95rem}
+.foot{margin-top:32px;text-align:center;color:var(--soft);font-size:.8rem}
+
+/* Anfitrión */
+.lock{max-width:360px;margin:28px auto;text-align:center}
+.lock h2{font-family:var(--serif);font-weight:600;font-size:1.5rem;margin:0 0 8px}
+.lock p{color:var(--soft);margin:0 0 18px}
+.lock input{width:100%;padding:14px 16px;font:inherit;font-size:1.05rem;border:1px solid var(--line);border-radius:12px;
+  background:transparent;color:var(--ink);text-align:center}
+.btn{appearance:none;border:0;background:var(--ink);color:var(--bg);font:inherit;font-weight:600;padding:13px 22px;
+  border-radius:12px;cursor:pointer;margin-top:12px;width:100%}
+.err{color:var(--ink);font-weight:600;margin-top:12px!important;min-height:1.5em}
+.hstatus{display:flex;justify-content:space-between;gap:12px;color:var(--soft);font-size:.9rem;margin-bottom:12px;font-variant-numeric:tabular-nums}
+.focus{background:var(--hero);color:#fff;border-radius:20px;padding:24px}
+.focus .fk{margin:0 0 4px;color:rgba(255,255,255,.82);font-size:.9rem}
+.focus h2{font-family:var(--serif);font-weight:600;font-size:1.6rem;line-height:1.15;margin:0}
+.focus .ft{margin:4px 0 0;color:rgba(255,255,255,.82);font-size:.9rem;font-variant-numeric:tabular-nums}
+.script{margin-top:18px;font-size:var(--hs,1.25rem);line-height:1.6}
+.script p{margin:0 0 .9em}
+.script p:last-child{margin-bottom:0}
+.pending{border:1px dashed rgba(255,255,255,.55);border-radius:12px;padding:14px 16px;font-size:1rem}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 0}
+.chip{font-size:.8rem;border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:2px 10px;color:rgba(255,255,255,.92)}
+.hb .chip{border-color:var(--line);color:var(--soft)}
+.beat{margin-bottom:1em}
+.beat:last-child{margin-bottom:0}
+.bl{display:block;font-size:.78rem;margin-bottom:2px;color:rgba(255,255,255,.72);font-family:var(--sans)}
+.hb .bl{color:var(--soft)}
+.script .beat p,.hb .beat p{margin:0}
+.tools{display:flex;gap:8px;justify-content:flex-end;align-items:center;margin:14px 0 4px}
+.tools .lbl{margin-right:auto;font-weight:600;font-family:var(--serif);font-size:1.2rem}
+.tools button{appearance:none;background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:10px;
+  padding:7px 12px;font:inherit;font-size:.9rem;font-weight:500;cursor:pointer}
+.hs{border-bottom:1px solid var(--line)}
+.hs.cur{background:var(--now-bg)}
+.hs summary,.hs .plain{list-style:none;cursor:pointer;display:grid;grid-template-columns:6.4rem 1fr;gap:12px;padding:14px 8px}
+.hs .plain{cursor:default}
+.hs summary::-webkit-details-marker{display:none}
+.hs .ht{font-variant-numeric:tabular-nums;font-weight:600;font-size:.95rem;white-space:nowrap}
+.hs .hn{font-family:var(--serif);font-weight:600;font-size:1.05rem;line-height:1.25}
+.hs .hm{display:block;font-family:var(--sans);font-weight:400;font-size:.85rem;color:var(--soft)}
+.hs .hb{padding:0 8px 18px calc(6.4rem + 20px);color:var(--ink)}
+.hs .hb p{margin:0 0 .8em}
+.hs .hb .pend{border:1px dashed var(--line);border-radius:10px;padding:10px 14px;color:var(--soft);font-size:.95rem}
+.sim{display:inline-block;margin-top:2px;font-size:.7rem;font-weight:600;border:1px solid var(--line);border-radius:6px;padding:0 6px}
+@media (max-width:420px){
+  .row,.hs summary,.hs .plain{grid-template-columns:5.6rem 1fr;gap:8px}
+  .hs .hb{padding-left:calc(5.6rem + 16px)}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div>
+      <p class="fest">XXIII Festival Solidario de Tunas</p>
+      <p class="uni">Universidad de La Sabana</p>
+    </div>
+    <div class="clock">
+      <time id="clock" aria-label="Hora actual en Colombia">--:--:--</time>
+      <span>Hora Colombia</span>
+      <span class="sim" id="sim" hidden>Simulación</span>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Secciones">
+    <button role="tab" id="tabP" aria-selected="true" aria-controls="panelP">Programa</button>
+    <button role="tab" id="tabS" aria-selected="false" aria-controls="panelS">Transmisión</button>
+    <button role="tab" id="tabH" aria-selected="false" aria-controls="panelH">Anfitrión</button>
+  </nav>
+
+  <main>
+    <!-- PROGRAMA -->
+    <section id="panelP" role="tabpanel" aria-labelledby="tabP">
+      <div class="hero">
+        <div class="live" id="live"><span class="dot"></span><span id="liveLabel">En vivo</span></div>
+        <div aria-live="polite">
+          <p class="kicker" id="hKicker"></p>
+          <h1 class="title" id="hTitle"></h1>
+          <p class="sub" id="hSub"></p>
+        </div>
+        <div id="hBar" hidden>
+          <div class="bar"><i id="hFill"></i></div>
+          <div class="barinfo"><span id="hLeft"></span><span id="hRight"></span></div>
+        </div>
+      </div>
+
+      <div class="next" id="next" hidden>
+        <div><span class="l">Sigue</span><span class="n" id="nName"></span></div>
+        <div class="a" id="nTime"></div>
+      </div>
+
+      <h2 class="h2">Programa de la tarde</h2>
+      <ol class="prog" id="prog"></ol>
+
+    </section>
+
+    <!-- TRANSMISIÓN -->
+    <section id="panelS" role="tabpanel" aria-labelledby="tabS" hidden>
+      <div class="stream">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M10 8.5v7l6-3.5-6-3.5z" fill="currentColor" stroke="none"/></svg>
+        <h2>Mira el festival en vivo</h2>
+        <p>Comparte el enlace con quienes no pudieron venir.</p>
+        <div class="linkbox"><input id="sUrl" type="text" readonly aria-label="Enlace de la transmisión"></div>
+        <button class="btn" id="sCopy" type="button">Copiar enlace</button>
+        <a class="btn ghost" id="sOpen" target="_blank" rel="noopener">Abrir transmisión</a>
+        <p class="msg" id="sMsg" role="status"></p>
+      </div>
+    </section>
+
+    <!-- ANFITRIÓN -->
+    <section id="panelH" role="tabpanel" aria-labelledby="tabH" hidden>
+      <div class="lock" id="lock">
+        <h2>Acceso para el anfitrión</h2>
+        <p>Ingresa la clave para ver el guion del festival.</p>
+        <input id="pw" type="password" placeholder="Clave" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Clave de acceso">
+        <button class="btn" id="unlock" type="button">Entrar</button>
+        <p class="err" id="pwErr" role="alert"></p>
+      </div>
+
+      <div id="hostBody" hidden>
+        <div class="hstatus"><span id="hsNow"></span><span id="hsLeft"></span></div>
+        <div class="focus" id="focus"></div>
+        <div class="tools">
+          <span class="lbl">Guion completo</span>
+          <button type="button" id="fMinus" aria-label="Reducir tamaño del texto">A−</button>
+          <button type="button" id="fPlus" aria-label="Aumentar tamaño del texto">A+</button>
+          <button type="button" id="relock">Bloquear</button>
+        </div>
+        <div id="script"></div>
+      </div>
+    </section>
+  </main>
+
+  <p class="foot">Universidad de La Sabana, Desarrollo Cultural</p>
+</div>
+
+<script>
+/* ============================================================
+   DATOS DEL FESTIVAL  (editar solo aquí)
+   ============================================================ */
+const FESTIVAL_DATE = '2026-09-19';          // fecha en Colombia
+const PASS_HASH = '61b1fc21485644e057e3548e18e1594185abc22d653ffd0c6186adb61a8751a2'; // SHA-256 de la clave
+
+const TUNAS = {
+  ext:  'Tuna Femenina Externadista',
+  uni:  'Tuna Uniandinos',
+  uis:  'Tuna Femenina Novata Universidad de Santander',
+  jav:  'Tuna Javeriana',
+  favj: 'Tuna Femenina Javeriana',
+  umng: 'Tuna de Medicina Universidad Militar Nueva Granada',
+  fsab: 'Tuna Femenina Universidad de La Sabana',
+  sab:  'Tuna Universidad de La Sabana'
+};
+
+/* [inicio, fin, tipo, tuna]  — hora de Colombia, formato 24 h
+   tipos: open | intro (presentación y organización) | show | close */
+const RAW = [
+  ['15:00','15:05','open'],
+  ['15:05','15:10','intro','ext'],  ['15:10','15:35','show','ext'],
+  ['15:35','15:40','intro','uni'],  ['15:40','16:05','show','uni'],
+  ['16:05','16:10','intro','uis'],  ['16:10','16:35','show','uis'],
+  ['16:35','16:40','intro','jav'],  ['16:40','17:05','show','jav'],
+  ['17:05','17:10','intro','favj'], ['17:10','17:35','show','favj'],
+  ['17:35','17:40','intro','umng'], ['17:40','18:05','show','umng'],
+  ['18:05','18:10','intro','fsab'], ['18:10','18:35','show','fsab'],
+  ['18:35','18:40','intro','sab'],  ['18:40','19:05','show','sab'],
+  ['19:05','19:10','close']
+];
+
+/* Enlace de la transmisión en vivo (por ahora YouTube; reemplazar cuando esté listo) */
+const STREAM_URL = 'https://www.youtube.com';
+
+/* Descripción de ~1 min por tuna, misma estructura para todas:
+   fund = año de fundación; b = [Origen, Trayectoria, Hitos, Hoy].
+   Al final se agrega automáticamente el llamado al escenario. Lectura estimada a 140 palabras por minuto. */
+const BEAT_LABELS = ['Origen','Trayectoria','Hitos','Hoy','Al escenario'];
+const WPM = 140;
+const DESC = {
+  ext: { fund:'1994', b:[
+    'La Tuna Femenina de la Universidad Externado de Colombia nació en 1994, por iniciativa de estudiantes de Derecho y con el apoyo de la doctora Emilssen González de Cancino, para reunir en la música a alumnas y egresadas.',
+    'Ha recorrido Colombia, con presencia en ASCUN, la Feria de Manizales, La Vega y el Festival Internacional de Tunas de Duitama, y ha llevado su música a Perú, Portugal, España y México.',
+    'Ha sido premiada como Mejor Tuna, Tuna más Tuna, Mejor Interpretación Musical y Mejor Puesta en Escenario, entre otros reconocimientos.',
+    'Hoy es una de las tunas femeninas universitarias más reconocidas del país, un grupo que reúne a estudiantes y egresadas alrededor de la música y la hermandad.'
+  ]},
+  uni: { fund:'1969', b:[
+    'La Tuna de la Universidad de los Andes se fundó el 24 de octubre de 1969, por iniciativa del estudiante Camilo Mariño y otros compañeros que quisieron unir su formación académica con la música tunera. Es una de las decanas de esta tradición en Colombia.',
+    'Fue becada en 1984 por la Tuna de la Universidad de Santander, en España; organizó en Bogotá el Primer Encuentro Iberoamericano de Tunas, en 1992; y ha llevado su música a Chile, México y Perú.',
+    'En Chile fue elegida dos veces consecutivas como la mejor tuna universitaria y tuvo a su cargo el cierre de los eventos, con transmisión de televisión en todo el país.',
+    'Hoy participa en eventos de beneficencia a favor de la comunidad, una causa que también nos reúne esta tarde.'
+  ]},
+  uis: { fund:'2023', b:[
+    'La Tuna Femenina Novata de la Universidad de Santander nació el 11 de febrero de 2023 y es la primera tuna femenina de la UDES, de Bucaramanga y de Santander.',
+    'Debutó en el Festival del Bolero 2023 con “Derroche”, de Ana Belén. En 2024 recibió el madrinazgo de la Tuna Femenina de La Sabana y, en el XI Certamen Nacional de Tunas, en Bucaramanga, la imposición de sus fajines.',
+    'El pasado 8 de agosto de 2026 celebró la imposición de sus primeras capas, un símbolo del crecimiento de sus integrantes.',
+    'Hoy sigue avanzando con entusiasmo, compromiso y espíritu de hermandad, orgullosa de ser pionera de la tradición tunera femenina en Santander.'
+  ]},
+  jav: { fund:'1968', b:[
+    'La Tuna Javeriana nació en 1968, apadrinada por la Vicerrectoría del Medio Universitario y avalada por el entonces embajador de España, José Miguel Ruiz Morales. Es catalogada como la primera tuna creada y reconocida por España en nuestro país.',
+    'Activa sin interrupción desde su fundación, ha representado a la universidad y a Colombia en Europa y América, y suma más de 80 canciones grabadas. En agosto de 2024 estrenó el disco “Olvídate de todo, menos de mí”.',
+    'Ganó el premio a Mejor Tuna en México, en 2019, y en Cusco, en 2023, además de reconocimientos a mejor bandera y mejor pandereta.',
+    'Hoy cuenta con más de 160 tunos, que interpretan bandolas, bandurrias, laúd, guitarras, contrabajo y panderetas.'
+  ]},
+  favj: { fund:'1971', b:[
+    'La Tuna Femenina Javeriana nació en 1971, cuando la estudiante de Comunicación Social Martha Vergara reunió voces femeninas y guitarras en un terreno que, hasta entonces, era exclusivo de los hombres en Colombia.',
+    'Ha viajado a España, Portugal, Chile, México, Perú y Puerto Rico. Su repertorio supera las 70 canciones, y en 2016 grabó su tercer disco, “Para toda la vida”.',
+    'En 2017 ganó Mejor Tuna en el Certamen Internacional Costa Cálida, en Murcia, y el primer lugar en el Festival Internacional de Tunas de Porto, en Portugal.',
+    'Este 2026 celebra 55 años de fundación y reúne a más de 100 tunas nombradas, estudiantes y egresadas de 14 facultades.'
+  ]},
+  umng: { fund:'2012', b:[
+    'La Tuna de Medicina de la Universidad Militar Nueva Granada nació en 2012, de la idea de jóvenes estudiantes de la facultad que quisieron continuar las tradiciones y enseñanzas de los antiguos tunos.',
+    'Con el aprendizaje de sus padrinos, la Tuna Universitaria de la Universidad Católica de Colombia, dio inicio en octubre de 2015 a la única tuna de facultad de tradición española en el país.',
+    'Ha representado a la universidad y a Colombia en certámenes y festivales nacionales e internacionales, donde ha obtenido múltiples reconocimientos.',
+    'Hoy la integran médicos egresados, especialistas, residentes y estudiantes. Su juramento: servir a la humanidad y consagrarse al arte del buen tunar. Una vez tuno, tuno para toda la vida.'
+  ]},
+  fsab: { fund:'2010', b:[
+    'En 2010, varias estudiantes de La Sabana se atrevieron a soñar una tuna femenina, desafiando la idea de que las tunas eran solo masculinas. Así nació la TFUS, con un repertorio que va de los pasodobles españoles a los ritmos caribeños y latinoamericanos.',
+    'Ha viajado a Lima, en 2019, y a México, en 2023, llevando la fuerza femenina y los sonidos de Colombia.',
+    'En ambos viajes fue premiada como mejor tuna, además de reconocimientos por sus bailes de pandereta y de bandera.',
+    'Con 16 años de historia, es un espacio de amistad, sororidad y camaradería, y es madrina de la Tuna Femenina Novata de la Universidad de Santander.'
+  ]},
+  sab: { fund:'1999', b:[
+    'La Tuna Universidad de La Sabana se fundó el 25 de julio de 1999, bajo la guía del doctor Adalberto Amaya, y en 2002 fue apadrinada por la Tuna Javeriana.',
+    'En 2003 lanzó su primer disco, con más de 3.000 ejemplares vendidos. Ha llevado su música de Manizales a Barranquilla, y a Chile, España, Francia, México y Perú.',
+    'Fue premiada por mejor pasacalles en Murcia, en 2008; segunda mejor tuna en Lima, en 2019; y Mejor Tuna en el Certamen Nacional de Bucaramanga, en 2024.',
+    'Con 27 años de historia, es uno de los grupos más antiguos de la Universidad y un faro de hermandad, respeto, esfuerzo y camaradería.'
+  ]}
+};
+
+const OPEN_TEXT = `Muy buenas tardes a todas y a todos, y bienvenidos al XXIII Festival Solidario de Tunas de la Universidad de La Sabana.
+
+Hoy la tradición de la tuna se une a una causa solidaria con las personas y las comunidades afectadas por el reciente terremoto en el Eje Cafetero y el Pacífico colombiano, y por los incendios forestales que golpean otras zonas del país.
+
+Una tradición que nos une, una causa que nos mueve. ¡Que comience el festival!`;
+
+const CLOSE_TEXT = `Llegamos al final de esta tarde. Gracias a cada una de las tunas por su música, su entrega y su alegría.
+
+Gracias también a todos ustedes por acompañarnos y ser parte de esta causa. Una tradición que nos une, una causa que nos mueve. ¡Hasta la próxima!`;
+
+/* ============================================================
+   LÓGICA
+   ============================================================ */
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2,'0');
+const NB = '\u00a0';
+const toSec = s => { const [h,m] = s.split(':').map(Number); return h*3600 + m*60; };
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function f12(sec, withSec){
+  let h = Math.floor(sec/3600), m = Math.floor(sec%3600/60), s = sec%60;
+  const ap = h >= 12 ? 'p.'+NB+'m.' : 'a.'+NB+'m.';
+  h = h%12 || 12;
+  return h + ':' + pad(m) + (withSec ? ':' + pad(s) : '') + NB + ap;
+}
+const f12n = sec => { const h = Math.floor(sec/3600)%12 || 12; return h + ':' + pad(Math.floor(sec%3600/60)); };
+const range = (a,b) => f12n(a) + ' – ' + f12n(b);
+function mmss(s){
+  s = Math.max(0, Math.floor(s));
+  const h = Math.floor(s/3600), m = Math.floor(s%3600/60), ss = s%60;
+  return h ? h + ':' + pad(m) + ':' + pad(ss) : pad(m) + ':' + pad(ss);
+}
+
+const SLOTS = RAW.map(([a,b,type,key], i) => ({ i, s:toSec(a), e:toSec(b), type, key }));
+
+const GROUPS = [];
+SLOTS.forEach(sl => {
+  if (sl.type === 'open' || sl.type === 'close') GROUPS.push({ type:sl.type, first:sl.i, last:sl.i, s:sl.s, e:sl.e });
+  else if (sl.type === 'intro') GROUPS.push({ type:'tuna', key:sl.key, first:sl.i, last:sl.i, intro:sl, s:sl.s, e:sl.e });
+  else { const g = GROUPS[GROUPS.length-1]; g.show = sl; g.last = sl.i; g.e = sl.e; }
+});
+
+/* --- Hora de Colombia (America/Bogota, UTC-5) --- */
+const FMT = new Intl.DateTimeFormat('en-CA', {
+  timeZone:'America/Bogota', hourCycle:'h23',
+  year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit'
+});
+function realBogota(){
+  const p = {};
+  FMT.formatToParts(new Date()).forEach(x => p[x.type] = x.value);
+  return { date: p.year + '-' + p.month + '-' + p.day, sec: (+p.hour)*3600 + (+p.minute)*60 + (+p.second) };
+}
+/* Ensayo: añadir ?hora=17:42 al enlace para simular una hora sin cambiar nada más */
+let SIM_OFFSET = null;
+try {
+  const q = new URLSearchParams(location.search).get('hora');
+  if (q && /^\d{1,2}:\d{2}(:\d{2})?$/.test(q)) {
+    const parts = q.split(':').map(Number);
+    SIM_OFFSET = (parts[0]*3600 + parts[1]*60 + (parts[2]||0)) - realBogota().sec;
+  }
+} catch(e){}
+function nowBogota(){
+  const r = realBogota();
+  if (SIM_OFFSET === null) return r;
+  return { date: FESTIVAL_DATE, sec: ((r.sec + SIM_OFFSET) % 86400 + 86400) % 86400 };
+}
+
+function computeState(n){
+  const N = SLOTS.length;
+  if (n.date < FESTIVAL_DATE) return { phase:'before', early:true, idx:-1, key:'b-early' };
+  if (n.date > FESTIVAL_DATE || n.sec >= SLOTS[N-1].e) return { phase:'after', idx:N, key:'after' };
+  if (n.sec < SLOTS[0].s) return { phase:'before', early:false, idx:-1, key:'b' };
+  let idx = SLOTS.findIndex(x => n.sec >= x.s && n.sec < x.e);
+  if (idx < 0) { idx = 0; SLOTS.forEach((x,i) => { if (x.s <= n.sec) idx = i; }); }
+  return { phase:'live', idx, key:'l' + idx };
+}
+
+function nextInfo(st){
+  if (st.phase === 'after') return null;
+  if (st.phase === 'before') return { name:'Apertura del Festival', at:SLOTS[0].s };
+  if (SLOTS[st.idx].type === 'close') return null;
+  for (let j = st.idx + 1; j < SLOTS.length; j++){
+    const x = SLOTS[j];
+    if (x.type === 'show')  return { name:TUNAS[x.key], at:x.s };
+    if (x.type === 'close') return { name:'Cierre y despedida', at:x.s };
+  }
+  return null;
+}
+
+/* --- Render: programa --- */
+let ST = null;
+
+function renderHero(st){
+  const live = $('live'), label = $('liveLabel');
+  let kicker = '', title = '', sub = '', bar = false;
+  live.classList.remove('on');
+
+  if (st.phase === 'before'){
+    label.textContent = 'Próximamente';
+    if (st.early){
+      kicker = 'El festival es el 19 de septiembre de 2026';
+      title = 'XXIII Festival Solidario de Tunas';
+      sub = 'Una tradición que nos une, una causa que nos mueve';
+    } else {
+      kicker = 'El festival comienza a las ' + f12(SLOTS[0].s);
+      title = '';
+      sub = 'Primera actividad: Apertura del Festival';
+    }
+  } else if (st.phase === 'after'){
+    label.textContent = 'Finalizado';
+    kicker = 'El festival terminó';
+    title = 'Gracias por ser parte de esta causa';
+    sub = 'Una tradición que nos une, una causa que nos mueve';
+  } else {
+    live.classList.add('on'); label.textContent = 'En vivo';
+    const cur = SLOTS[st.idx]; bar = true;
+    if (cur.type === 'open'){ kicker = 'Apertura'; title = 'Apertura del Festival'; sub = 'Bienvenidos al XXIII Festival Solidario de Tunas'; }
+    else if (cur.type === 'intro'){ kicker = 'Presentación y organización'; title = TUNAS[cur.key]; sub = 'El escenario se prepara. En breve comienza su presentación.'; }
+    else if (cur.type === 'show'){ kicker = 'En escena'; title = TUNAS[cur.key]; sub = ''; }
+    else { kicker = 'Cierre y despedida'; title = 'Gracias por ser parte de esta causa'; sub = 'Una tradición que nos une, una causa que nos mueve'; }
+  }
+  $('hKicker').textContent = kicker;
+  if (title) $('hTitle').textContent = title;
+  $('hSub').textContent = sub; $('hSub').hidden = !sub;
+  $('hBar').hidden = !bar;
+}
+
+function renderNext(st){
+  const nx = nextInfo(st);
+  $('next').hidden = !nx;
+  if (nx){ $('nName').textContent = nx.name; $('nTime').textContent = f12(nx.at); }
+}
+
+function renderProgram(st){
+  $('prog').innerHTML = GROUPS.map(g => {
+    const state = st.idx > g.last ? 'past' : (st.idx >= g.first ? 'now' : 'future');
+    let title, meta = '', tag = '';
+    if (g.type === 'open')  title = 'Apertura del Festival';
+    else if (g.type === 'close') title = 'Cierre y despedida';
+    else { title = TUNAS[g.key]; meta = 'Presentación y organización ' + range(g.intro.s, g.intro.e); }
+    if (state === 'now'){
+      const t = SLOTS[st.idx].type;
+      tag = t === 'show' ? 'En escena' : t === 'intro' ? 'Presentación en curso' : t === 'open' ? 'En curso' : 'En curso';
+    }
+    const time = g.type === 'tuna' ? range(g.show.s, g.show.e) : range(g.s, g.e);
+    return '<li class="row ' + state + '"' + (state === 'now' ? ' aria-current="true"' : '') + '>' +
+      '<div class="tm">' + time + '</div>' +
+      '<div><h3>' + esc(title) + '</h3>' + (meta ? '<p>' + esc(meta) + '</p>' : '') +
+      (tag ? '<span class="tag">' + tag + '</span>' : '') + '</div></li>';
+  }).join('');
+}
+
+/* --- Render: anfitrión --- */
+const paras = txt => txt.trim().split(/\n\s*\n/).map(p => '<p>' + esc(p.trim()) + '</p>').join('');
+function scriptFor(sl){
+  if (sl.type === 'open')  return { html: paras(OPEN_TEXT), pending:false, draft:true };
+  if (sl.type === 'close') return { html: paras(CLOSE_TEXT), pending:false, draft:true };
+  if (sl.type === 'intro'){
+    const d = DESC[sl.key];
+    if (!d || !d.b || !d.b.length) return { html:'', pending:true };
+    const texts = d.b.concat(['Con ustedes, ' + TUNAS[sl.key] + '. ¡Un fuerte aplauso!']);
+    const words = texts.join(' ').split(/\s+/).length;
+    const secs = Math.round(words / WPM * 60);
+    return {
+      pending:false,
+      chips: '<span class="chip">Fundación: ' + esc(d.fund) + '</span><span class="chip">Lectura estimada: ' + secs + ' s</span>',
+      html: texts.map((t,i) => '<div class="beat"><span class="bl">' + BEAT_LABELS[i] + '</span><p>' + esc(t) + '</p></div>').join('')
+    };
+  }
+  return null;
+}
+function slotTitle(sl){
+  if (sl.type === 'open')  return 'Apertura del Festival';
+  if (sl.type === 'close') return 'Cierre y despedida';
+  if (sl.type === 'intro') return 'Presenta a ' + TUNAS[sl.key];
+  return 'En escena: ' + TUNAS[sl.key];
+}
+
+function renderHost(st){
+  /* tarjeta de enfoque */
+  let fi = -1, fk = '';
+  if (st.phase === 'before'){ fi = 0; fk = 'Primero en tu guion'; }
+  else if (st.phase === 'live'){
+    const cur = SLOTS[st.idx];
+    if (cur.type === 'show'){ fi = Math.min(st.idx + 1, SLOTS.length - 1); fk = 'Prepárate: sigue en tu guion'; }
+    else { fi = st.idx; fk = 'Lee ahora'; }
+  }
+  const F = $('focus');
+  if (fi < 0){
+    F.innerHTML = '<p class="fk">Festival finalizado</p><h2>Gracias por conducir esta tarde</h2>';
+  } else {
+    const sl = SLOTS[fi], sc = scriptFor(sl);
+    F.innerHTML = '<p class="fk">' + fk + '</p><h2>' + esc(slotTitle(sl)) + '</h2>' +
+      '<p class="ft">' + range(sl.s, sl.e) + '</p>' +
+      (sc && sc.chips ? '<div class="chips">' + sc.chips + '</div>' : '') +
+      '<div class="script">' + (sc ? (sc.pending
+        ? '<div class="pending">⚠ Descripción de la tuna pendiente (unos 60 segundos).</div>'
+        : sc.html) : '') + '</div>';
+  }
+
+  /* guion completo */
+  $('script').innerHTML = SLOTS.map(sl => {
+    const cur = st.phase === 'live' && st.idx === sl.i;
+    const sc = scriptFor(sl);
+    const time = range(sl.s, sl.e);
+    if (!sc){
+      return '<div class="hs' + (cur ? ' cur' : '') + '"><div class="plain"><span class="ht">' + time + '</span>' +
+        '<span class="hn">' + esc(slotTitle(sl)) + '<span class="hm">Presentación musical de 25 minutos</span></span></div></div>';
+    }
+    return '<details class="hs' + (cur ? ' cur' : '') + '"><summary><span class="ht">' + time + '</span>' +
+      '<span class="hn">' + esc(slotTitle(sl)) + (sc.draft ? '<span class="hm">Borrador para ajustar</span>' : '') + '</span></summary>' +
+      '<div class="hb">' + (sc.pending ? '<div class="pend">⚠ Descripción pendiente (unos 60 segundos).</div>' : (sc.chips ? '<div class="chips">' + sc.chips + '</div><div style="height:12px"></div>' : '') + sc.html) + '</div></details>';
+  }).join('');
+}
+
+/* --- Actualización por segundo --- */
+function updateLive(st, n){
+  if (st.phase === 'before'){
+    if (!st.early) $('hTitle').textContent = mmss(SLOTS[0].s - n.sec);
+    $('hsNow').textContent = 'El festival aún no comienza';
+    $('hsLeft').textContent = st.early ? '' : 'Faltan ' + mmss(SLOTS[0].s - n.sec);
+    return;
+  }
+  if (st.phase === 'after'){ $('hsNow').textContent = 'Festival finalizado'; $('hsLeft').textContent = ''; return; }
+  const cur = SLOTS[st.idx], dur = cur.e - cur.s, rem = cur.e - n.sec;
+  $('hFill').style.width = Math.min(100, Math.max(0, (n.sec - cur.s) / dur * 100)) + '%';
+  $('hLeft').textContent = 'Quedan ' + mmss(rem);
+  $('hRight').textContent = 'Termina ' + f12(cur.e);
+  $('hsNow').textContent = 'Ahora: ' + (cur.type === 'show' ? TUNAS[cur.key] : cur.type === 'intro' ? 'Presentación de ' + TUNAS[cur.key] : cur.type === 'open' ? 'Apertura' : 'Cierre');
+  $('hsLeft').textContent = 'Quedan ' + mmss(rem);
+}
+
+function tick(){
+  const n = nowBogota();
+  $('clock').textContent = f12(n.sec, true);
+  const st = computeState(n);
+  if (!ST || st.key !== ST.key){
+    ST = st;
+    renderHero(st); renderNext(st); renderProgram(st); renderHost(st);
+  }
+  updateLive(st, n);
+}
+
+/* --- Pestañas --- */
+const TABS = { P:'panelP', S:'panelS', H:'panelH' };
+function showTab(k){
+  Object.keys(TABS).forEach(t => {
+    $(TABS[t]).hidden = t !== k;
+    $('tab' + t).setAttribute('aria-selected', t === k);
+  });
+}
+$('tabP').onclick = () => showTab('P');
+$('tabS').onclick = () => showTab('S');
+$('tabH').onclick = () => showTab('H');
+
+/* --- Transmisión en vivo --- */
+$('sUrl').value = STREAM_URL;
+$('sOpen').href = STREAM_URL;
+function copied(){ $('sMsg').textContent = 'Enlace copiado'; setTimeout(() => { $('sMsg').textContent = ''; }, 2500); }
+async function copyLink(){
+  try {
+    if (navigator.clipboard && window.isSecureContext){ await navigator.clipboard.writeText(STREAM_URL); copied(); return; }
+    throw new Error('sin clipboard');
+  } catch(e){
+    try {
+      const i = $('sUrl'); i.focus(); i.select(); i.setSelectionRange(0, STREAM_URL.length);
+      if (document.execCommand('copy')){ copied(); return; }
+    } catch(_){}
+    $('sMsg').textContent = 'No se pudo copiar solo. Mantén presionado el enlace para copiarlo.';
+  }
+}
+$('sCopy').onclick = copyLink;
+$('sUrl').addEventListener('focus', e => e.target.select());
+
+/* --- Acceso anfitrión --- */
+function setUnlocked(v){ $('lock').hidden = v; $('hostBody').hidden = !v; }
+async function sha256(t){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+async function tryUnlock(){
+  const v = $('pw').value.trim();
+  if (!v){ $('pwErr').textContent = 'Escribe la clave.'; return; }
+  try {
+    if (!(window.crypto && crypto.subtle)) throw new Error('nosubtle');
+    if (await sha256(v) === PASS_HASH){
+      $('pw').value = ''; $('pwErr').textContent = '';
+      try { sessionStorage.setItem('hostOK','1'); } catch(e){}
+      setUnlocked(true);
+    } else { $('pwErr').textContent = 'Clave incorrecta. Revisa mayúsculas y números.'; }
+  } catch(e){
+    $('pwErr').textContent = 'No se pudo validar la clave. Abre la página desde el enlace https.';
+  }
+}
+$('unlock').onclick = tryUnlock;
+$('pw').addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+$('relock').onclick = () => { try { sessionStorage.removeItem('hostOK'); } catch(e){} setUnlocked(false); };
+try { if (sessionStorage.getItem('hostOK') === '1') setUnlocked(true); } catch(e){}
+
+/* --- Tamaño de texto del guion --- */
+let hs = 1.25;
+try { const v = parseFloat(localStorage.getItem('hostFont')); if (v >= 1 && v <= 2.25) hs = v; } catch(e){}
+function applyFont(){
+  $('hostBody').style.setProperty('--hs', hs + 'rem');
+  try { localStorage.setItem('hostFont', hs); } catch(e){}
+}
+$('fPlus').onclick  = () => { hs = Math.min(2.25, hs + .125); applyFont(); };
+$('fMinus').onclick = () => { hs = Math.max(1, hs - .125); applyFont(); };
+applyFont();
+
+if (SIM_OFFSET !== null) $('sim').hidden = false;
+tick();
+setInterval(tick, 1000);
+</script>
+</body>
+</html>
