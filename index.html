@@ -46,6 +46,8 @@ button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid
 
 /* Hero */
 .hero{background:var(--hero);color:#fff;border-radius:20px;padding:26px 24px 24px}
+.herotop{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.delay{font-size:.8rem;border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:2px 10px;color:#fff;white-space:nowrap}
 .live{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;color:rgba(255,255,255,.88)}
 .dot{width:8px;height:8px;border-radius:50%;background:#fff}
 .live.on .dot{animation:pulse 1.8s ease-in-out infinite}
@@ -98,7 +100,7 @@ button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid
 .btn{appearance:none;border:0;background:var(--ink);color:var(--bg);font:inherit;font-weight:600;padding:13px 22px;
   border-radius:12px;cursor:pointer;margin-top:12px;width:100%}
 .err{color:var(--ink);font-weight:600;margin-top:12px!important;min-height:1.5em}
-.hstatus{display:flex;justify-content:space-between;gap:12px;color:var(--soft);font-size:.9rem;margin-bottom:12px;font-variant-numeric:tabular-nums}
+.hstatus{flex-wrap:wrap;display:flex;justify-content:space-between;gap:12px;color:var(--soft);font-size:.9rem;margin-bottom:12px;font-variant-numeric:tabular-nums}
 .focus{background:var(--hero);color:#fff;border-radius:20px;padding:24px}
 .focus .fk{margin:0 0 4px;color:rgba(255,255,255,.82);font-size:.9rem}
 .focus h2{font-family:var(--serif);font-weight:600;font-size:1.6rem;line-height:1.15;margin:0}
@@ -162,7 +164,7 @@ button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid
     <!-- PROGRAMA -->
     <section id="panelP" role="tabpanel" aria-labelledby="tabP">
       <div class="hero">
-        <div class="live" id="live"><span class="dot"></span><span id="liveLabel">En vivo</span></div>
+        <div class="herotop"><div class="live" id="live"><span class="dot"></span><span id="liveLabel">En vivo</span></div><span class="delay" id="delayTag" hidden></span></div>
         <div aria-live="polite">
           <p class="kicker" id="hKicker"></p>
           <h1 class="title" id="hTitle"></h1>
@@ -208,7 +210,7 @@ button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid
       </div>
 
       <div id="hostBody" hidden>
-        <div class="hstatus"><span id="hsNow"></span><span id="hsLeft"></span></div>
+        <div class="hstatus"><span id="hsNow"></span><span id="hsDelay"></span><span id="hsLeft"></span></div>
         <div class="focus" id="focus"></div>
         <div class="tools">
           <span class="lbl">Guion completo</span>
@@ -258,7 +260,7 @@ const RAW = [
 ];
 
 /* Enlace de la transmisión en vivo (por ahora YouTube; reemplazar cuando esté listo) */
-const STREAM_URL = 'https://www.instagram.com/experienciaunisabana';
+const STREAM_URL = 'https://www.youtube.com';
 
 /* Descripción de ~1 min por tuna, misma estructura para todas:
    fund = año de fundación; b = [Origen, Trayectoria, Hitos, Hoy].
@@ -349,14 +351,19 @@ function mmss(s){
   return h ? h + ':' + pad(m) + ':' + pad(ss) : pad(m) + ':' + pad(ss);
 }
 
-const SLOTS = RAW.map(([a,b,type,key], i) => ({ i, s:toSec(a), e:toSec(b), type, key }));
-
+/* s0/e0 = horario original; s/e = horario con retraso aplicado */
+let DELAY = 0;                       // minutos de retraso (negativo = adelanto)
+const SLOTS = RAW.map(([a,b,type,key], i) => ({ i, s0:toSec(a), e0:toSec(b), s:toSec(a), e:toSec(b), type, key }));
 const GROUPS = [];
-SLOTS.forEach(sl => {
-  if (sl.type === 'open' || sl.type === 'close') GROUPS.push({ type:sl.type, first:sl.i, last:sl.i, s:sl.s, e:sl.e });
-  else if (sl.type === 'intro') GROUPS.push({ type:'tuna', key:sl.key, first:sl.i, last:sl.i, intro:sl, s:sl.s, e:sl.e });
-  else { const g = GROUPS[GROUPS.length-1]; g.show = sl; g.last = sl.i; g.e = sl.e; }
-});
+function buildGroups(){
+  GROUPS.length = 0;
+  SLOTS.forEach(sl => {
+    if (sl.type === 'open' || sl.type === 'close') GROUPS.push({ type:sl.type, first:sl.i, last:sl.i, s:sl.s, e:sl.e });
+    else if (sl.type === 'intro') GROUPS.push({ type:'tuna', key:sl.key, first:sl.i, last:sl.i, intro:sl, s:sl.s, e:sl.e });
+    else { const g = GROUPS[GROUPS.length-1]; g.show = sl; g.last = sl.i; g.e = sl.e; }
+  });
+}
+buildGroups();
 
 /* --- Hora de Colombia (America/Bogota, UTC-5) --- */
 const FMT = new Intl.DateTimeFormat('en-CA', {
@@ -627,6 +634,35 @@ $('fMinus').onclick = () => { hs = Math.max(1, hs - .125); applyFont(); };
 applyFont();
 
 if (SIM_OFFSET !== null) $('sim').hidden = false;
+
+/* --- Retraso en vivo: lee retraso.json (misma carpeta que este HTML) cada 20 s --- */
+const DELAY_URL = 'retraso.json';
+function delayLabel(){ return DELAY > 0 ? 'Retraso: ' + DELAY + ' min' : DELAY < 0 ? 'Adelanto: ' + (-DELAY) + ' min' : ''; }
+function setDelay(d){
+  DELAY = d;
+  SLOTS.forEach(x => { x.s = x.s0 + d*60; x.e = x.e0 + d*60; });
+  buildGroups();
+  const t = delayLabel();
+  $('delayTag').hidden = !t; $('delayTag').textContent = t;
+  $('hsDelay').textContent = t;
+  ST = null; tick();
+}
+async function pollDelay(){
+  try {
+    const r = await fetch(DELAY_URL + '?t=' + Date.now(), { cache:'no-store' });
+    if (!r.ok) return;
+    const j = await r.json();
+    let d = Number(j.retraso);
+    if (!isFinite(d)) return;                       // dato inválido: se conserva el último valor
+    d = Math.max(-60, Math.min(240, Math.round(d)));
+    if (d !== DELAY) setDelay(d);
+  } catch(e){}                                      // sin red o JSON roto: se conserva el último valor
+}
+let FORCED = null;
+try { const q = new URLSearchParams(location.search).get('retraso'); if (q !== null && q !== '' && isFinite(Number(q))) FORCED = Math.round(Number(q)); } catch(e){}
+if (FORCED !== null) setDelay(FORCED);              // ?retraso=12 sirve para ensayar y desactiva la lectura del archivo
+else { pollDelay(); setInterval(pollDelay, 20000); }
+
 tick();
 setInterval(tick, 1000);
 </script>
